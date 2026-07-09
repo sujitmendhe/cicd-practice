@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: action/checkout@v4
+        uses: actions/checkout@v4
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -32,18 +32,18 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_GITHUB_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
-    \*Uses OIDC with a role (AWS_GITHUB_ROLE_ARN secret) instead of storing long‑lived access keys, which is increasingly the recommended way to connect GitHub Actions to AWS.
-
-Runs validation and plan on every push/PR.
-
-You can later add an apply job only on main and maybe with workflow_dispatch for manual approval.
-
-You will need to:
-
-Create an IAM role in AWS that trusts GitHub’s OIDC provider and lets Terraform manage your infra.
-
-Put that role ARN into a GitHub secret AWS_GITHUB_ROLE_ARN. *\
-
+    # Uses OIDC with a role (AWS_GITHUB_ROLE_ARN secret)
+# instead of storing long-lived AWS access keys.
+#
+# Runs validation and plan on every push/PR.
+#
+# Later you can add a terraform apply job that
+# runs only on the main branch.
+#
+# Prerequisites:
+# - Create an IAM role that trusts GitHub's OIDC provider.
+# - Store the role ARN in the GitHub secret:
+#   AWS_GITHUB_ROLE_ARN
       - name: Terraform fmt
         run: terraform fmt -check
 
